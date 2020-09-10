@@ -9,7 +9,7 @@ df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
 # gets the top count songs for a given year
-def top_songs_year(df, year, count):
+def top_songs_year(df, year: int, count: int) -> Counter:
     df_year = df[df['year'] == year]
     content = df_year['content'].to_list()
     most_common = Counter(content).most_common(count)
@@ -17,7 +17,7 @@ def top_songs_year(df, year, count):
 
 
 # gets the top count artists for a given year
-def top_artists_year(df, year, count):
+def top_artists_year(df, year: int, count: int) -> Counter:
     df_year = df[df['year'] == year]
     content = df_year['Artist Name'].to_list()
     most_common = Counter(content).most_common(count)
@@ -25,7 +25,7 @@ def top_artists_year(df, year, count):
 
 
 # split df into dict of dfs by year
-def split_years(df):
+def split_years(df) -> dict:
     years = set(df['year'].to_list())
     dfs = {}
     for year in years:
@@ -34,7 +34,7 @@ def split_years(df):
 
 
 # get total minutes in given year
-def minutes(df, year):
+def minutes(df, year: int) -> int:
     df_year = df[df['year'] == year]
     starts = df['Event Start Timestamp'].to_list()
     ends = df['Event End Timestamp'].to_list()
