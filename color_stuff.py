@@ -34,7 +34,8 @@ def get_art(name):
     return result.artwork(800)
 
 
-def requests_image(name):
+# helper function used to get the image
+def requests_image(name):  # not sure why this needs to be here but it breaks if I put them up top
     from PIL import Image
     import requests
     i = requests.get(get_art(name)).content
