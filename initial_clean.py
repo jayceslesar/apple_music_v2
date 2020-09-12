@@ -40,4 +40,6 @@ for index, row in df.iterrows():
     curr_content = row['Content Name'] + ', ' + row['Artist Name']
     combined_content.append(curr_content)
 df['content'] = combined_content
+df = df.sort_values(by='Event Start Timestamp')
+df = df.applymap(lambda s:s.lower() if type(s) == str else s)
 df.to_csv(r"cleaned_apple_data.csv")
