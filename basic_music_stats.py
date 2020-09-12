@@ -8,43 +8,36 @@ cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'E
 df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
-# top songs of all time
-def top_songs(df, count: int) -> Counter:
+def top_songs(df, n: int) -> Counter:
+    """
+    Returns the top n songs in a given library
+    """
     content = df['content'].to_list()
-    most_common = Counter(content).most_common(count)
+    most_common = Counter(content).most_common(n)
     return most_common
 
 
-# gets the top count songs for a given year
-def top_songs_year(df, year: int, count: int) -> Counter:
+def top_songs_year(df, year: int, n: int) -> Counter:
+    """Returns the top n songs for a library in a given year"""
     df = df[df['year'] == year]
-    return top_songs(df, count)
+    return top_songs(df, n)
 
 
-# top artists of all time
-def top_artists(df, count: int) -> Counter:
+def top_artists(df, n: int) -> Counter:
+    """Returns the top n artists in a given library"""
     content = df['Artist Name'].to_list()
-    most_common = Counter(content).most_common(count)
+    most_common = Counter(content).most_common(n)
     return most_common
 
 
-# gets the top count artists for a given year
-def top_artists_year(df, year: int, count: int) -> Counter:
+def top_artists_year(df, year: int, n: int) -> Counter:
+    """Returns the top n artists for a library in a given year"""
     df = df[df['year'] == year]
-    return top_artists(df, count)
+    return top_artists(df, n)
 
 
-# split df into dict of dfs by year
-def split_years(df) -> dict:
-    years = set(df['year'].to_list())
-    dfs = {}
-    for year in years:
-        dfs[year] = df[df['year'] == year]
-    return dfs
-
-
-# get the total minutes of a dataframe (useful in other functions)
 def total_minutes(df) -> int:
+    """Returns the total minutes of a library"""
     starts = df['Event Start Timestamp'].to_list()
     ends = df['Event End Timestamp'].to_list()
     seconds = 0
@@ -59,21 +52,21 @@ def total_minutes(df) -> int:
     return int(seconds/60)
 
 
-# get total minutes in given year
 def year_minutes(df, year: int) -> int:
+    """Returns total minutes in given year"""
     df = df[df['year'] == year]
     return total_minutes(df)
 
 
-# get total minutes in given month in year
 def month_minutes(df, year: int, month: int) -> int:
+    """Returns total minutes in given month in year"""
     df = df[df['year'] == year]
     df = df[df['month'] == month]
     return total_minutes(df)
 
 
-# return the top songs and minutes listened of an artist in your library
 def artist_stats(df, artist: str) -> dict:
+    """Returns the top songs and minutes listened of an artist in your library"""
     artist_stats = {}
     artist = artist.lower()
     df = df[df['Artist Name'] == artist]

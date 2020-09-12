@@ -2,7 +2,9 @@ import pandas as pd
 import basic_music_stats
 
 
-# mostly combinations of other functions in basic_music_stats
+"""
+mostly combinations of other functions in basic_music_stats as well as other less trivial functions
+"""
 
 
 cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'Event End Timestamp', 'year', 'month', 'content']
@@ -10,10 +12,10 @@ cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'E
 df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
-# gets the top songs played and minutes for a given range of top
-def top_artist_stats(df, count):
+def top_artist_stats(df, n: int) -> dict:
+    """Returns the top songs played and minutes for a given range of n top artists"""
     artist_data = {}
-    for artist in basic_music_stats.top_artists(df, count):
+    for artist in basic_music_stats.top_artists(df, n):
         artist = artist[0]
         artist_data[artist] = {}
         data = basic_music_stats.artist_stats(df, artist)
@@ -22,19 +24,19 @@ def top_artist_stats(df, count):
     return artist_data
 
 
-# helper function for songs_played_once()
-def occurs_once(a, item):
-    return a.count(item) == 1
+def occurs(a: list, item, threshold: int):
+    """helper function for songs_played_once()"""
+    return a.count(item) <= threshold
 
 
-# finds all songs that were only ever played once and calcs a metric of proportion of total songs that are bad songs
 def songs_played_once(df) -> list:
+    """Returns all songs that were only ever played once and calcs a metric of proportion of total songs that are bad songs"""
     songs_played_once_data = {}
     songs_played_once = []
     songs = df['content'].to_list()
     songs_set = set(songs)
     for song in songs_set:
-        if occurs_once(songs, song):
+        if occurs(songs, song, 1):
             songs_played_once.append(song)
     songs_played_once_data['songs_played_once'] = songs_played_once
     songs_played_once_data['ratio'] = len(songs_played_once)/len(df)

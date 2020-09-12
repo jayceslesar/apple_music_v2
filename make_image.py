@@ -9,18 +9,7 @@ import os
 EpsImagePlugin.gs_windows_binary =  r'C:\Program Files\gs\gs9.52\bin\gswin64c'
 
 
-def get_color_console():
-    # input
-    artist = input("Enter an artist: ")
-    song = input("Enter a song/album by them: ")
-    # grab colors
-    colors = color_stuff.compute_top_image_colors(song + ' - ' + artist)
-    # print colors
-    for i, color in enumerate(colors):
-        print(C().b_rgb(0, 0, 0).rgb(color[0], color[1], color[2], 'Top color ' + str(i + 1)))
-
-
-# same as above but no console
+# gets color stats for a given album art
 def get_colors():
     artist = input("Enter an artist: ")
     song = input("Enter a song/album by them: ")
@@ -29,7 +18,7 @@ def get_colors():
 
 
 # gets the length of each line drawn in the diagonal_stripes function
-def determine_line_lengths(colors):
+def determine_line_lengths(colors: list) -> list:
     lengths = []
     distance = 100
     for c in colors:
@@ -38,26 +27,8 @@ def determine_line_lengths(colors):
     return lengths
 
 
-
-# was a test to make a polygon with n colors sides
-def polygon(artist, song, colors):
-    t.colormode(255)
-    t.title("polygon of " + song + " by " + artist)
-    t.speed(1)
-    t.pensize(10)
-    n = len(colors)
-    degrees = 180 * (n-2)
-    # how much to rotate each time
-    rotate = 180 - degrees/n
-    for c in colors:
-        t.pencolor(c[0], c[1], c[2])
-        t.rt(rotate)
-        t.forward(100)
-    t.mainloop()
-
-
 # draws a kind of triangle with the top colors as stripes
-def diagonal_stripes(artist, song, colors):
+def diagonal_stripes(artist: str, song: str, colors: list):
     SPEED = 10  # speed of drawing
     PENSIZE = 10  # size of each line
     LINE_GAP = 35  # gap in between
