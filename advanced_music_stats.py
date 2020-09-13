@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import datetime
 import basic_music_stats
 
@@ -30,13 +31,34 @@ def earworm(df, song: str) -> bool:
     for index, row in df.iterrows():
         date = str(row['year']) + ', ' + str(row['month']) + ', ' + str(row['day'])
         dates.append(date)
+    # get rid of dupes inplace as to keep order
     dates = remove_dupes_inplace(dates)
+    # get all dates assuming that there are days the song wasn't played in the dates list
+    # TODO:: bro clean this up
+    start = dates[0].replace(', ', '-')
+    end = dates[-1].replace(', ', '-')
+    start_date = datetime.datetime.strptime(start, '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(end, '%Y-%m-%d')
+    dates_generated = [start_date + datetime.timedelta(days=x) for x in range(0, (end_date-start_date).days)]
+    all_dates_generated = []
+    for d in dates_generated:
+        cleaned = str(d.strftime('%Y-%m-%d')).split('-') # .replace('-', ', ')
+        cleaned[1] = str(int(cleaned[1]))
+        cleaned = cleaned[0] + ', ' + cleaned[1] + ', ' + cleaned[2]
+        all_dates_generated.append(cleaned)
+
     frequency = []
-    for d in dates:
-        d = d.split(',')
-        df_date = df[(df['year'] == int(d[0])) & (df['month'] == int(d[1])) & (df['day'] == int(d[2]))]
-        plays = len(df_date)
-        print(d, plays)
+    # find frequency
+    for d in all_dates_generated:
+        if d not in dates:
+            plays = 0
+            frequency.append(plays)
+        else:
+            d = d.split(',')
+            df_date = df[(df['year'] == int(d[0])) & (df['month'] == int(d[1])) & (df['day'] == int(d[2]))]
+            plays = len(df_date)
+            frequency.append(plays)
+    # now the frequency list matches the index of date, the date doesn't matter now that the frequency list exists
     earworms = []
     return earworms
 
