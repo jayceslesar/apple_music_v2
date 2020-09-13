@@ -74,8 +74,17 @@ def month_minutes(df, year: int, month: int) -> int:
     return total_minutes(df)
 
 
+def artist_minutes(df, artist: str) -> int:
+    """Returns total minutes for a specific artist"""
+    df = df[df['Artist Name'] == artist]
+    return total_minutes(df)
+
+
 def artist_stats(df, artist: str) -> dict:
-    """Returns the top songs and minutes listened of an artist in your library"""
+    """
+    More general function for returning bulk stats
+    Returns the top songs and minutes listened of an artist in your library
+    """
     artist_stats = {}
     artist = artist.lower()
     df = df[df['Artist Name'] == artist]

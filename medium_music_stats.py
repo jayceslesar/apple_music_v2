@@ -12,18 +12,6 @@ cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'E
 df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
-def top_artist_stats(df, n: int) -> dict:
-    """Returns the top songs played and minutes for a given range of n top artists"""
-    artist_data = {}
-    for artist in basic_music_stats.top_artists(df, n):
-        artist = artist[0]
-        artist_data[artist] = {}
-        data = basic_music_stats.artist_stats(df, artist)
-        artist_data[artist]['top_songs'] = data['top_songs']
-        artist_data[artist]['artist_minutes'] = data['artist_minutes']
-    return artist_data
-
-
 def occurs(a: list, item, threshold: int):
     """helper function for songs_played_once()"""
     return a.count(item) <= threshold
