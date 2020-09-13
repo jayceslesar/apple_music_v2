@@ -61,9 +61,13 @@ def earworm(df, song: str) -> bool:
     df = df[df['content'] == song]
     fs = frequencies(df)
     streaks = [list(g) for k, g in itertools.groupby(fs, key=lambda x:x!=0) if k]
-    print(streaks)
-    earworms = []
-    return earworms
+    # if a streak exists
+    if len(streaks) > 0:
+        # if the first streak was longer than n days
+        if len(streaks[0]) > 4:
+            # if the number of plays in the first week is greater than x times the length of the streak
+            if sum(streaks[0]) > 2.5*len(streaks[0]):
+                return True
 
 
 def longest_song_streak(df, song: str) -> int:
@@ -83,6 +87,8 @@ def longest_artist_streak(df, artist: str) -> int:
     streak_lens = [len(i) for i in streaks]
     return max(streak_lens)
 
-
-print(longest_song_streak(df, '24, idk'))
-earworm(df, 'idk, 24')
+df = df[df['year'] == 2020]
+songs = list(set(df['content'].to_list()))
+for song in songs:
+    if earworm(df, song):
+        print(song)
