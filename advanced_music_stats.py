@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import itertools
+import operator
 import datetime
 import basic_music_stats
 
@@ -17,10 +19,9 @@ def remove_dupes_inplace(lst):
     return lst
 
 
-
-def earworm(df, song: str) -> bool:
+def frequencies(df, song: str) -> list:
     """
-    returns true if a song is considered an earworm or not
+    returns frequency list of the first time to the last time a song was played
 
     song must be the format of the column 'content' in the dataframe
     """
@@ -33,7 +34,7 @@ def earworm(df, song: str) -> bool:
         dates.append(date)
     # get rid of dupes inplace as to keep order
     dates = remove_dupes_inplace(dates)
-    # get all dates assuming that there are days the song wasn't played in the dates list
+    # generate all dates assuming that there are days the song wasn't played in the dates list
     # TODO:: bro clean this up
     start = dates[0].replace(', ', '-')
     end = dates[-1].replace(', ', '-')
@@ -44,6 +45,7 @@ def earworm(df, song: str) -> bool:
     for d in dates_generated:
         cleaned = str(d.strftime('%Y-%m-%d')).split('-') # .replace('-', ', ')
         cleaned[1] = str(int(cleaned[1]))
+        cleaned[2] = str(int(cleaned[2]))
         cleaned = cleaned[0] + ', ' + cleaned[1] + ', ' + cleaned[2]
         all_dates_generated.append(cleaned)
 
@@ -59,14 +61,28 @@ def earworm(df, song: str) -> bool:
             plays = len(df_date)
             frequency.append(plays)
     # now the frequency list matches the index of date, the date doesn't matter now that the frequency list exists
+    return frequency
+
+
+def earworm(df, song: str) -> bool:
+    """will determine if a song is an earworm or not by how fast it picks up and stays there from frequency list"""
+    frequency = frequencies(df, song)
+    print(frequency)
     earworms = []
     return earworms
 
 
 def longest_streak(df):
     """finds the song with the longest n-day streak"""
-    pass
+    songs = set(df['content'].to_list())
+    frequency_map = {}
+    # for song in songs:
+    fs = frequencies(df, 'memphis, ag club')
+    longest_streak = max((list(y) for (x,y) in itertools.groupby((enumerate(fs)),operator.itemgetter(1)) if x > 0), key=len)
+    print(fs)
+    print(longest_streak)
 
 
+earworm(df, '24, idk')
 
-earworm(df, 'memphis, ag club')
+
