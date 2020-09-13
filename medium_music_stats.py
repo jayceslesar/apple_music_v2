@@ -41,3 +41,5 @@ def songs_played_once(df) -> list:
     songs_played_once_data['songs_played_once'] = songs_played_once
     songs_played_once_data['ratio'] = len(songs_played_once)/len(df)
     return songs_played_once_data
+
+

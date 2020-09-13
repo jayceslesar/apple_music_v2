@@ -9,9 +9,7 @@ df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
 def top_songs(df, n: int) -> Counter:
-    """
-    Returns the top n songs in a given library
-    """
+    """Returns the top n songs in a given library"""
     content = df['content'].to_list()
     most_common = Counter(content).most_common(n)
     return most_common
@@ -20,6 +18,12 @@ def top_songs(df, n: int) -> Counter:
 def top_songs_year(df, year: int, n: int) -> Counter:
     """Returns the top n songs for a library in a given year"""
     df = df[df['year'] == year]
+    return top_songs(df, n)
+
+
+def top_songs_month(df, year: int, n: int) -> Counter:
+    """Returns the top n songs for a library in a given year and month"""
+    df = df[(df['year'] == year) & (df['month'] == month)]
     return top_songs(df, n)
 
 
@@ -33,6 +37,12 @@ def top_artists(df, n: int) -> Counter:
 def top_artists_year(df, year: int, n: int) -> Counter:
     """Returns the top n artists for a library in a given year"""
     df = df[df['year'] == year]
+    return top_artists(df, n)
+
+
+def top_artists_month(df, year: int, month: int, n: int) -> Counter:
+    """Returns the top n artists for a library in a given year and month"""
+    df = df[(df['year'] == year) & (df['month'] == month)]
     return top_artists(df, n)
 
 
@@ -60,8 +70,7 @@ def year_minutes(df, year: int) -> int:
 
 def month_minutes(df, year: int, month: int) -> int:
     """Returns total minutes in given month in year"""
-    df = df[df['year'] == year]
-    df = df[df['month'] == month]
+    df = df[(df['year'] == year) & (df['month'] == month)]
     return total_minutes(df)
 
 
