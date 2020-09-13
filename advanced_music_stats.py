@@ -7,6 +7,16 @@ cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'E
 df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
+
+def remove_dupes_inplace(lst):
+    """helper function for earworm"""
+    for i in range(len(lst)-1,0,-1):
+        if lst[i] == lst[i-1]:
+            del lst[i]
+    return lst
+
+
+
 def earworm(df, song: str) -> bool:
     """
     returns true if a song is considered an earworm or not
@@ -16,16 +26,17 @@ def earworm(df, song: str) -> bool:
     # get a dataframe of just the content in question for analysis
     df = df[df['content'] == song]
     # build frequency by looping thru and building frequency list from datetimes
-    frequencies = []
-    seen_dates = []
+    dates = []
     for index, row in df.iterrows():
-        date_str = row['Event Start Timestamp'].replace('t', ' ')[:18]
-        date = str(datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')).split()[0]
-        print(date)
-        if date not in seen_dates:
-            pass
-        else:
-            pass
+        date = str(row['year']) + ', ' + str(row['month']) + ', ' + str(row['day'])
+        dates.append(date)
+    dates = remove_dupes_inplace(dates)
+    frequency = []
+    for d in dates:
+        d = d.split(',')
+        df_date = df[(df['year'] == int(d[0])) & (df['month'] == int(d[1])) & (df['day'] == int(d[2]))]
+        plays = len(df_date)
+        print(d, plays)
     earworms = []
     return earworms
 
@@ -36,4 +47,4 @@ def longest_streak(df):
 
 
 
-earworm(df, '24, idk')
+earworm(df, 'memphis, ag club')
