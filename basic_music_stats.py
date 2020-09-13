@@ -3,7 +3,7 @@ from collections import Counter
 import datetime
 
 
-cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'Event End Timestamp', 'year', 'month', 'content']
+cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'Event End Timestamp', 'year', 'month', 'content' , 'day']
 
 df = pd.read_csv(r"cleaned_apple_data.csv")
 

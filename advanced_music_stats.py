@@ -2,7 +2,7 @@ import pandas as pd
 import datetime
 import basic_music_stats
 
-cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'Event End Timestamp', 'year', 'month', 'content']
+cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'Event End Timestamp', 'year', 'month', 'content', 'day']
 
 df = pd.read_csv(r"cleaned_apple_data.csv")
 
@@ -20,7 +20,8 @@ def earworm(df, song: str) -> bool:
     seen_dates = []
     for index, row in df.iterrows():
         date_str = row['Event Start Timestamp'].replace('t', ' ')[:18]
-        date = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        date = str(datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')).split()[0]
+        print(date)
         if date not in seen_dates:
             pass
         else:
