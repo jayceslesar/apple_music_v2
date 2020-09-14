@@ -81,7 +81,7 @@ def earworm(df, song: str, avg_freq: float, std_freq: float) -> bool:
     mean_streak = np.mean(all_streaks)
     # if a streak exists
     if len(streaks) > 0:
-        # if the mean streak of this song is greater than the user average streak - n*frequency standard deviation
+        # if the mean streak of this song is greater than the user average streak - x*frequency standard deviation
         if mean_streak > avg_freq - 0.5*std_freq:
             # if the number of plays in the first week is greater than x times the length of the streak
             return True
