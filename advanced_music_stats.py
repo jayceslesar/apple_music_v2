@@ -56,18 +56,35 @@ def frequencies(df) -> list:
     return frequency
 
 
-def earworm(df, song: str) -> bool:
+def determine_avg_streak(df):
+    """gets streak statistics for an entire dataframe to use as a metric"""
+    all_streaks = []
+    for song in list(set(df['content'].to_list())):
+        df_content = df[df['content'] == song]
+        fs = frequencies(df_content)
+        streaks = [list(g) for k, g in itertools.groupby(fs, key=lambda x:x!=0) if k]
+        for streak in streaks:
+            if len(streak) > 3:
+                all_streaks.append(len(streak))
+    return (np.mean(all_streaks), np.std(all_streaks))
+
+
+def earworm(df, song: str, avg_freq: float, std_freq: float) -> bool:
     """will determine if a song is an earworm or not by how fast it picks up and stays there from frequency list"""
-    df = df[df['content'] == song]
-    fs = frequencies(df)
+    df_song = df[df['content'] == song]
+    fs = frequencies(df_song)
     streaks = [list(g) for k, g in itertools.groupby(fs, key=lambda x:x!=0) if k]
+    all_streaks = []
+    for streak in streaks:
+        if len(streak) > 3:
+            all_streaks.append(len(streak))
+    mean_streak = np.mean(all_streaks)
     # if a streak exists
     if len(streaks) > 0:
-        # if the first streak was longer than n days
-        if len(streaks[0]) > 4:
+        # if the mean streak of this song is greater than the user average streak - n*frequency standard deviation
+        if mean_streak > avg_freq - 0.5*std_freq:
             # if the number of plays in the first week is greater than x times the length of the streak
-            if sum(streaks[0]) > 2.5*len(streaks[0]):
-                return True
+            return True
 
 
 def longest_song_streak(df, song: str) -> int:
@@ -87,8 +104,11 @@ def longest_artist_streak(df, artist: str) -> int:
     streak_lens = [len(i) for i in streaks]
     return max(streak_lens)
 
+
 df = df[df['year'] == 2020]
-songs = list(set(df['content'].to_list()))
-for song in songs:
-    if earworm(df, song):
+freq_stats = determine_avg_streak(df)
+avg_freq = freq_stats[0]
+std_freq = freq_stats[1]
+for song in list(set(df['content'].to_list())):
+    if earworm(df, song, avg_freq, std_freq):
         print(song)
