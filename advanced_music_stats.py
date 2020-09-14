@@ -11,7 +11,7 @@ df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
 def remove_dupes_inplace(lst):
-    """helper function for earworm"""
+    """helper function for earworm, helps keep dates sorted"""
     for i in range(len(lst)-1,0,-1):
         if lst[i] == lst[i-1]:
             del lst[i]
@@ -45,9 +45,11 @@ def frequencies(df) -> list:
     # find frequency
     for d in all_dates_generated:
         if d not in dates:
+            # if there is a date that it isn't played, add the date and 0 plays
             plays = 0
             frequency.append(plays)
         else:
+            # add the plays to date, where plays is the size of the dataset on that day
             d = d.split(',')
             df_date = df[(df['year'] == int(d[0])) & (df['month'] == int(d[1])) & (df['day'] == int(d[2]))]
             plays = len(df_date)

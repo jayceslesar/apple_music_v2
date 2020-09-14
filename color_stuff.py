@@ -54,7 +54,7 @@ def compute_top_image_colors(name):
             r, g, b = img.getpixel((x, y))
             # turm into string so collections.Counter can work
             colors.append(str(r) + ' ' + str(g) + ' ' + str(b))
-    top_colors = Counter(colors).most_common(250)
+    top_colors = Counter(colors).most_common(150)
     to_pop = []
     for i, c1 in enumerate(top_colors):
         for j in range(i+1, len(top_colors)):
