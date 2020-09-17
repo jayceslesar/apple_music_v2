@@ -94,3 +94,7 @@ def artist_stats(df, artist: str) -> dict:
     artist_stats['top_songs'] = top_songs
     artist_stats['artist_minutes'] = minutes
     return artist_stats
+
+def top_artist_songs_year(df, year: int, artist: str, n: int):
+    df = df[(df['year'] == year) & (df['Artist Name'] == artist)]
+    return top_songs(df, n)
