@@ -11,7 +11,7 @@ import color_stuff
 
 
 """
-DONE split bar graph for top 5 artists of the year
+DONE split bar graph for top 3 artists of the year
 
 TODO line graph for number of songs each month and number of new songs each month
 
@@ -25,7 +25,7 @@ TODO earworms (10 songs that are in earworms that arent in any of the other part
 
 df = pd.read_csv(r"cleaned_apple_data.csv")
 year = 2020
-num_artists = 4
+num_artists = 3
 num_artist_songs = 5
 
 
@@ -36,6 +36,7 @@ def top_n_top_5(df, year, num_artists, num_artist_songs):
     for i, artist in enumerate(artists):
         xs, ys = [], []
         data = basic_music_stats.top_artist_songs_year(df, year, artist, num_artist_songs)
+        plays = sum([pair[1] for pair in data])
         songs_to_color = [pair[0][:pair[0].rfind(', ')] for pair in data]
         fixed_songs = []
         for song in songs_to_color:
@@ -57,10 +58,11 @@ def top_n_top_5(df, year, num_artists, num_artist_songs):
             y=ys,
             name=artist,
             marker_color=colors
-        ), row=i + 1, col=1)
+        ), row=i+1, col=1)
+        fig.update_yaxes(title="Total Plays: " + str(plays), row=i+1, col=1)
     fig.update_layout(showlegend=False, bargap=0.15)
-    fig.update_layout(height=225*num_artists, width=150*num_artist_songs,
-                  title_text="Top " + str(num_artists) + " Artists and Top " + str(num_artist_songs) + " Songs for each Artist")
+    fig.update_layout(height=275*num_artists, width=150*num_artist_songs,
+                  title_text="Top " + str(num_artists) + " Artists and Top " + str(num_artist_songs) + " Songs for each Artist in " + str(year))
     fig.update_layout(font=dict(
         family="Courier New, monospace",
         size=12
