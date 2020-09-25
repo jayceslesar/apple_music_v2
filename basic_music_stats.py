@@ -4,7 +4,7 @@ import datetime
 
 
 cols_to_care_about = ['Artist Name', 'Content Name', 'Event Start Timestamp', 'Event End Timestamp', 'year', 'month', 'content' , 'day']
-
+months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 df = pd.read_csv(r"cleaned_apple_data.csv")
 
 
@@ -21,7 +21,7 @@ def top_songs_year(df, year: int, n: int) -> Counter:
     return top_songs(df, n)
 
 
-def top_songs_month(df, year: int, n: int) -> Counter:
+def top_songs_month(df, year: int, month: int, n: int) -> Counter:
     """Returns the top n songs for a library in a given year and month"""
     df = df[(df['year'] == year) & (df['month'] == month)]
     return top_songs(df, n)
@@ -95,6 +95,44 @@ def artist_stats(df, artist: str) -> dict:
     artist_stats['artist_minutes'] = minutes
     return artist_stats
 
+
 def top_artist_songs_year(df, year: int, artist: str, n: int):
+    """Returns the top n songs for a given artist in a given year"""
     df = df[(df['year'] == year) & (df['Artist Name'] == artist)]
     return top_songs(df, n)
+
+
+def plays(df, year: int, month: int):
+    """Returns the amount of plays in a given month"""
+    df = df[(df['year'] == year) & (df['month'] == month)]
+    return len(df)
+
+
+def unique_plays(df, year: int, month: int):
+    """Returns the amount of unique plays in a given month"""
+    df = df[(df['year'] == year) & (df['month'] == month)]
+    return len(set(df['content'].to_list()))
+
+
+def plays_per_month(df, year: int):
+    """Returns the number of plays each month mapped to each month in a list by index"""
+    play_counts = []
+    for month in sorted(list(set(df['month'].to_list()))):
+        play_counts.append(plays(df, year, month))
+    return play_counts
+
+
+def unique_plays_per_month(df, year: int):
+    """Returns the number of unique plays each month mapped to each month in a list by index"""
+    play_counts = []
+    for month in sorted(list(set(df['month'].to_list()))):
+        play_counts.append(unique_plays(df, year, month))
+    return play_counts
+
+
+def top_songs_per_month(df, year: int):
+    """Returns the top song each month and the number of plays"""
+    data = []
+    for month in sorted(list(set(df['month'].to_list()))):
+        data.append(top_songs_month(df, year, month, 1)[0])
+    return data

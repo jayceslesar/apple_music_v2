@@ -31,3 +31,11 @@ def songs_played_once(df) -> list:
     return songs_played_once_data
 
 
+def get_line_graph_data(df, year: int):
+    graph_df = pd.DataFrame()
+    graph_df['plays_per_month'] = basic_music_stats.plays_per_month(df, year)
+    graph_df['unique_plays_per_month'] = basic_music_stats.unique_plays_per_month(df, year)
+    graph_df['top_song_of_month'] = [pair[0] for pair in basic_music_stats.top_songs_per_month(df, year)]
+    graph_df['top_song_of_month_play_counts'] = [pair[1] for pair in basic_music_stats.top_songs_per_month(df, year)]
+    graph_df['month'] = basic_music_stats.months
+    return graph_df
